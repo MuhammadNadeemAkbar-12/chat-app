@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password Reset</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container.forgot-container {
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .btn-reset {
+            background-color: #0d6efd;
+            color: white;
+            font-weight: 500;
+        }
+        .btn-reset:hover {
+            background-color: #0b5ed7;
+        }
+        .form-control:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+    </style>
+</head>
+
+<body class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="container forgot-container bg-white p-4 p-md-5">
+        <h1 class="text-center mb-4">Reset Your Password</h1>
+        
+        <form id="forgot-container">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email" required />
+            </div>
+            <div class="mb-3">
+                <label for="verification-code" class="form-label">Ahtentication</label>
+                <input type="text" class="form-control" id="verification-code" name="verification-code" maxlength="6" required />
+            </div>
+            <button type="submit" class="btn btn-reset w-100 py-2">
+                Verify Code
+            </button>
+        </form>
+        
+        <form id="forgot-form" style="display: none;">
+            <div class="mb-3">
+                <label for="new-password" class="form-label">New Password</label>
+                <input type="password" class="form-control" id="new-password" name="new-password" required minlength="6" />
+                <div class="form-text">Password must be at least 6 characters long</div>
+            </div>
+            <div class="mb-3">
+                <label for="confirm-password" class="form-label">Confirm New Password</label>
+                <input type="password" class="form-control" id="confirm-password" name="confirm-password" required minlength="6" />
+            </div>
+            <button type="submit" class="btn btn-reset w-100 py-2">
+                Reset Password
+            </button>
+
+            <p class="text-center mt-4">
+                Remember your password? <a href="login.html">Log in</a>
+            </p>
+        </form>
+    </div>
+    <script src="./Javascript/forgot.js"></script>
+</body>
+
+</html>
