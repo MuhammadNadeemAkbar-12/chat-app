@@ -13,8 +13,7 @@ themeToggle.addEventListener('click', () => {
 });
 
 // Initialize theme from localStorage or prefer-color-scheme
-const preferredTheme = localStorage.getItem('theme') ||
-    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+const preferredTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 setTheme(preferredTheme === 'dark');
 
 // Form validation and submission
@@ -188,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Redirect to login page after a short delay
                 setTimeout(() => {
-                    window.location.href = 'login.html';
+                    window.location.href = 'login.html'; // relative path
                 }, 1500);
             }, 1000);
         }
