@@ -1,437 +1,647 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | ChatApp</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <style>
-        :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #50e3c2;
-            --light-color: #f8f9fa;
-            --dark-color: #232a36;
-            --text-light: #f1f1f1;
-            --text-dark: #212529;
-        }
-        
-        body {
-            background: var(--light-color);
-            background-image: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(80, 227, 194, 0.1) 100%), url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 100vh;
-            transition: all 0.3s ease;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        .signup-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .signup-card {
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .signup-image {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            position: relative;
-        }
-        
-        .signup-image-content {
-            text-align: center;
-            color: white;
-            z-index: 2;
-        }
-        
-        .signup-image h2 {
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
-        
-        .signup-image p {
-            opacity: 0.9;
-            margin-bottom: 2rem;
-        }
-        
-        .signup-image svg {
-            width: 100%;
-            max-width: 300px;
-            height: auto;
-            margin: 0 auto;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .signup-form {
-            background: white;
-            padding: 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .form-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .form-header h1 {
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .form-header p {
-            color: #6c757d;
-        }
-        
-        .form-control {
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            border: 1px solid #e0e0e0;
-            margin-bottom: 1.25rem;
-            transition: all 0.3s ease;
-        }
-        
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(74, 144, 226, 0.25);
-        }
-        
-        .btn-signup {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.75rem;
-            border-radius: 10px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-top: 0.5rem;
-        }
-        
-        .btn-signup:hover {
-            background-color: #3a7bc8;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
-        }
-        
-        .login-link {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: #6c757d;
-        }
-        
-        .login-link a {
-            color: var(--primary-color);
-            font-weight: 600;
-            text-decoration: none;
-        }
-        
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-        
-        .input-group-text {
-            background-color: transparent;
-            border-right: none;
-        }
-        
-        .input-with-icon {
-            border-left: none;
-        }
-        
-        .terms-check {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .terms-check label {
-            margin-left: 0.5rem;
-            color: #6c757d;
-        }
-        
-        .terms-check a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-        
-        .terms-check a:hover {
-            text-decoration: underline;
-        }
-        
-        .password-strength {
-            height: 5px;
-            background-color: #e9ecef;
-            border-radius: 5px;
-            margin-bottom: 1.25rem;
-            overflow: hidden;
-        }
-        
-        .strength-bar {
-            height: 100%;
-            width: 0;
-            transition: width 0.3s ease, background-color 0.3s ease;
-        }
-        
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .theme-toggle:hover {
-            transform: scale(1.1);
-        }
-        
-        .validation-message {
-            font-size: 0.8rem;
-            color: #dc3545;
-            margin-top: -0.75rem;
-            margin-bottom: 1rem;
-            display: none;
-        }
-        
-        .is-invalid {
-            border-color: #dc3545 !important;
-        }
-        
-        .is-valid {
-            border-color: #28a745 !important;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        /* Dark theme styles */
-        body.dark {
-            background: #12181f;
-            background-image: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(80, 227, 194, 0.1) 100%), url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            color: var(--text-light);
-        }
-        
-        body.dark .signup-form {
-            background: var(--dark-color);
-            color: var(--text-light);
-        }
-        
-        body.dark .form-control {
-            background-color: #2d3748;
-            border-color: #4a5568;
-            color: var(--text-light);
-        }
-        
-        body.dark .form-control:focus {
-            background-color: #2d3748;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(74, 144, 226, 0.25);
-            color: var(--text-light);
-        }
-        
-        body.dark .form-header h1 {
-            color: var(--secondary-color);
-        }
-        
-        body.dark .form-header p {
-            color: #a0aec0;
-        }
-        
-        body.dark .terms-check label {
-            color: #a0aec0;
-        }
-        
-        body.dark .login-link {
-            color: #a0aec0;
-        }
-        
-        body.dark .theme-toggle {
-            background: rgba(45, 55, 72, 0.9);
-            color: var(--text-light);
-        }
-        
-        @media (max-width: 991.98px) {
-            .signup-image {
-                padding: 2rem 1rem;
-            }
-            
-            .signup-form {
-                padding: 2rem;
-            }
-        }
-        
-        @media (max-width: 767.98px) {
-            .signup-card {
-                border-radius: 0;
-            }
-            
-            .signup-form {
-                padding: 1.5rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">
-        <i class="bi bi-moon-fill" id="themeIcon"></i>
-    </button>
-    
-    <div class="container signup-container py-5">
-        <div class="row g-0">
-            <div class="col-lg-6">
-                <div class="signup-image h-100">
-                    <div class="signup-image-content">
-                        <h2>Connect with Friends</h2>
-                        <p>Join our community and start chatting with friends and colleagues in real-time.</p>
-                        <svg viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <ellipse cx="400" cy="500" rx="320" ry="60" fill="rgba(255,255,255,0.1)"/>
-                            <rect x="250" y="200" width="300" height="200" rx="30" fill="white" fill-opacity="0.9"/>
-                            <rect x="280" y="240" width="240" height="40" rx="10" fill="rgba(74, 144, 226, 0.2)"/>
-                            <rect x="280" y="300" width="180" height="30" rx="8" fill="rgba(74, 144, 226, 0.2)"/>
-                            <rect x="280" y="350" width="120" height="20" rx="6" fill="rgba(74, 144, 226, 0.2)"/>
-                            <circle cx="370" cy="260" r="10" fill="var(--secondary-color)"/>
-                            <circle cx="400" cy="260" r="10" fill="var(--secondary-color)"/>
-                            <circle cx="430" cy="260" r="10" fill="var(--secondary-color)"/>
-                            <rect x="500" y="370" width="40" height="40" rx="20" fill="var(--secondary-color)"/>
-                            <rect x="260" y="370" width="40" height="40" rx="20" fill="var(--secondary-color)"/>
-                            <rect x="370" y="390" width="60" height="20" rx="10" fill="rgba(74, 144, 226, 0.2)"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="signup-form h-100">
-                    <div class="form-header">
-                        <h1>Create Your Account</h1>
-                        <p>Fill in your details to get started</p>
-                    </div>
-                    
-                    <form id="signup-form" autocomplete="off" novalidate>
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
-                            </div>
-                            <div class="validation-message" id="username-validation">Username must be at least 3 characters</div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
-                            </div>
-                            <div class="validation-message" id="email-validation">Please enter a valid email address</div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
-                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                    <i class="bi bi-eye-fill"></i>
-                                </button>
-                            </div>
-                            <div class="password-strength">
-                                <div class="strength-bar" id="password-strength-bar"></div>
-                            </div>
-                            <div class="validation-message" id="password-validation">Password must be at least 6 characters</div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="confirm-password" class="form-label">Confirm Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                                <input type="password" class="form-control" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
-                            </div>
-                            <div class="validation-message" id="confirm-password-validation">Passwords do not match</div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="verification-code" class="form-label">Verification Code</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-shield-lock-fill"></i></span>
-                                <input type="text" class="form-control" id="verification-code" name="verification-code" maxlength="6" placeholder="6-digit code" required>
-                            </div>
-                            <div class="validation-message" id="verification-code-validation">Code must be 6 digits</div>
-                        </div>
-                        
-                        <div class="terms-check">
-                            <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
-                            <label for="terms">I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a></label>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-signup" id="submit-btn">
-                            <span id="submit-text">Sign Up</span>
-                            <span id="submit-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                        </button>
-                    </form>
-                    
-                    <div class="login-link">
-                        Already have an account? <a href="login.html">Log in here</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Terms and Conditions Modal -->
-    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h6>1. Acceptance of Terms</h6>
-                    <p>By accessing or using ChatApp, you agree to be bound by these Terms and Conditions. If you do not agree with any part of these terms, you may not use our service.</p>
-                    
-                    <h6>2. User Accounts</h6>
-                    <p>You are responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all activities that occur under your account.</p>
-                    
-                    <h6>3. Privacy Policy</h6>
-                    <p>Your use of ChatApp is also governed by our Privacy Policy, which explains how we collect, use, and protect your personal information.</p>
-                    
-                    <h6>4. User Conduct</h6>
-                    <p>You agree not to use ChatApp to upload, post, or otherwise transmit any content that is unlawful, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, or otherwise objectionable.</p>
-                    
-                    <h6>5. Termination</h6>
-                    <p>We reserve the right to terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach these Terms.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="/ChatApp/Javascript/signup.js"></script>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Sign Up | ChatApp</title>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+			rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
+		<style>
+			:root {
+				--primary-color: #4a90e2;
+				--secondary-color: #50e3c2;
+				--light-color: #f8f9fa;
+				--dark-color: #232a36;
+				--text-light: #f1f1f1;
+				--text-dark: #212529;
+			}
 
-    
-</body>
+			body {
+				background: var(--light-color);
+				background-image: linear-gradient(
+						135deg,
+						rgba(74, 144, 226, 0.1) 0%,
+						rgba(80, 227, 194, 0.1) 100%
+					),
+					url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80");
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+				min-height: 100vh;
+				transition: all 0.3s ease;
+				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+			}
+
+			.signup-container {
+				max-width: 1200px;
+				margin: 0 auto;
+			}
+
+			.signup-card {
+				border-radius: 20px;
+				overflow: hidden;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+				transition: all 0.3s ease;
+			}
+
+			.signup-image {
+				background: linear-gradient(
+					135deg,
+					var(--primary-color) 0%,
+					var(--secondary-color) 100%
+				);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 2rem;
+				position: relative;
+			}
+
+			.signup-image-content {
+				text-align: center;
+				color: white;
+				z-index: 2;
+			}
+
+			.signup-image h2 {
+				font-weight: 700;
+				margin-bottom: 1.5rem;
+			}
+
+			.signup-image p {
+				opacity: 0.9;
+				margin-bottom: 2rem;
+			}
+
+			.signup-image svg {
+				width: 100%;
+				max-width: 300px;
+				height: auto;
+				margin: 0 auto;
+				animation: float 6s ease-in-out infinite;
+			}
+
+			.signup-form {
+				background: white;
+				padding: 3rem;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+
+			.form-header {
+				text-align: center;
+				margin-bottom: 2rem;
+			}
+
+			.form-header h1 {
+				font-weight: 700;
+				color: var(--primary-color);
+				margin-bottom: 0.5rem;
+			}
+
+			.form-header p {
+				color: #6c757d;
+			}
+
+			.form-control {
+				padding: 0.75rem 1rem;
+				border-radius: 10px;
+				border: 1px solid #e0e0e0;
+				margin-bottom: 1.25rem;
+				transition: all 0.3s ease;
+			}
+
+			.form-control:focus {
+				border-color: var(--primary-color);
+				box-shadow: 0 0 0 0.25rem rgba(74, 144, 226, 0.25);
+			}
+
+			.btn-signup {
+				background-color: var(--primary-color);
+				color: white;
+				border: none;
+				padding: 0.75rem;
+				border-radius: 10px;
+				font-weight: 600;
+				transition: all 0.3s ease;
+				margin-top: 0.5rem;
+			}
+
+			.btn-signup:hover {
+				background-color: #3a7bc8;
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+			}
+
+			.login-link {
+				text-align: center;
+				margin-top: 1.5rem;
+				color: #6c757d;
+			}
+
+			.login-link a {
+				color: var(--primary-color);
+				font-weight: 600;
+				text-decoration: none;
+			}
+
+			.login-link a:hover {
+				text-decoration: underline;
+			}
+
+			.input-group-text {
+				background-color: transparent;
+				border-right: none;
+			}
+
+			.input-with-icon {
+				border-left: none;
+			}
+
+			.terms-check {
+				display: flex;
+				align-items: center;
+				margin-bottom: 1.5rem;
+			}
+
+			.terms-check label {
+				margin-left: 0.5rem;
+				color: #6c757d;
+			}
+
+			.terms-check a {
+				color: var(--primary-color);
+				text-decoration: none;
+			}
+
+			.terms-check a:hover {
+				text-decoration: underline;
+			}
+
+			.password-strength {
+				height: 5px;
+				background-color: #e9ecef;
+				border-radius: 5px;
+				margin-bottom: 1.25rem;
+				overflow: hidden;
+			}
+
+			.strength-bar {
+				height: 100%;
+				width: 0;
+				transition: width 0.3s ease, background-color 0.3s ease;
+			}
+
+			.theme-toggle {
+				position: fixed;
+				top: 20px;
+				right: 20px;
+				z-index: 1000;
+				background: rgba(255, 255, 255, 0.9);
+				border: none;
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
+
+			.theme-toggle:hover {
+				transform: scale(1.1);
+			}
+
+			.validation-message {
+				font-size: 0.8rem;
+				color: #dc3545;
+				margin-top: -0.75rem;
+				margin-bottom: 1rem;
+				display: none;
+			}
+
+			.is-invalid {
+				border-color: #dc3545 !important;
+			}
+
+			.is-valid {
+				border-color: #28a745 !important;
+			}
+
+			@keyframes float {
+				0%,
+				100% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(-10px);
+				}
+			}
+
+			/* Dark theme styles */
+			body.dark {
+				background: #12181f;
+				background-image: linear-gradient(
+						135deg,
+						rgba(74, 144, 226, 0.1) 0%,
+						rgba(80, 227, 194, 0.1) 100%
+					),
+					url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80");
+				color: var(--text-light);
+			}
+
+			body.dark .signup-form {
+				background: var(--dark-color);
+				color: var(--text-light);
+			}
+
+			body.dark .form-control {
+				background-color: #2d3748;
+				border-color: #4a5568;
+				color: var(--text-light);
+			}
+
+			body.dark .form-control:focus {
+				background-color: #2d3748;
+				border-color: var(--primary-color);
+				box-shadow: 0 0 0 0.25rem rgba(74, 144, 226, 0.25);
+				color: var(--text-light);
+			}
+
+			body.dark .form-header h1 {
+				color: var(--secondary-color);
+			}
+
+			body.dark .form-header p {
+				color: #a0aec0;
+			}
+
+			body.dark .terms-check label {
+				color: #a0aec0;
+			}
+
+			body.dark .login-link {
+				color: #a0aec0;
+			}
+
+			body.dark .theme-toggle {
+				background: rgba(45, 55, 72, 0.9);
+				color: var(--text-light);
+			}
+
+			@media (max-width: 991.98px) {
+				.signup-image {
+					padding: 2rem 1rem;
+				}
+
+				.signup-form {
+					padding: 2rem;
+				}
+			}
+
+			@media (max-width: 767.98px) {
+				.signup-card {
+					border-radius: 0;
+				}
+
+				.signup-form {
+					padding: 1.5rem;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<button
+			class="theme-toggle"
+			id="themeToggle"
+			title="Toggle dark/light mode">
+			<i class="bi bi-moon-fill" id="themeIcon"></i>
+		</button>
+
+		<div class="container signup-container py-5">
+			<div class="row g-0">
+				<div class="col-lg-6">
+					<div class="signup-image h-100">
+						<div class="signup-image-content">
+							<h2>Connect with Friends</h2>
+							<p>
+								Join our community and start chatting with friends and
+								colleagues in real-time.
+							</p>
+							<svg
+								viewBox="0 0 800 600"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg">
+								<ellipse
+									cx="400"
+									cy="500"
+									rx="320"
+									ry="60"
+									fill="rgba(255,255,255,0.1)" />
+								<rect
+									x="250"
+									y="200"
+									width="300"
+									height="200"
+									rx="30"
+									fill="white"
+									fill-opacity="0.9" />
+								<rect
+									x="280"
+									y="240"
+									width="240"
+									height="40"
+									rx="10"
+									fill="rgba(74, 144, 226, 0.2)" />
+								<rect
+									x="280"
+									y="300"
+									width="180"
+									height="30"
+									rx="8"
+									fill="rgba(74, 144, 226, 0.2)" />
+								<rect
+									x="280"
+									y="350"
+									width="120"
+									height="20"
+									rx="6"
+									fill="rgba(74, 144, 226, 0.2)" />
+								<circle
+									cx="370"
+									cy="260"
+									r="10"
+									fill="var(--secondary-color)" />
+								<circle
+									cx="400"
+									cy="260"
+									r="10"
+									fill="var(--secondary-color)" />
+								<circle
+									cx="430"
+									cy="260"
+									r="10"
+									fill="var(--secondary-color)" />
+								<rect
+									x="500"
+									y="370"
+									width="40"
+									height="40"
+									rx="20"
+									fill="var(--secondary-color)" />
+								<rect
+									x="260"
+									y="370"
+									width="40"
+									height="40"
+									rx="20"
+									fill="var(--secondary-color)" />
+								<rect
+									x="370"
+									y="390"
+									width="60"
+									height="20"
+									rx="10"
+									fill="rgba(74, 144, 226, 0.2)" />
+							</svg>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="signup-form h-100">
+						<div class="form-header">
+							<h1>Create Your Account</h1>
+							<p>Fill in your details to get started</p>
+						</div>
+
+						<form id="signup-form" autocomplete="off" novalidate>
+							<div class="mb-3">
+								<label for="username" class="form-label">Username</label>
+								<div class="input-group">
+									<span class="input-group-text"
+										><i class="bi bi-person-fill"></i
+									></span>
+									<input
+										type="text"
+										class="form-control"
+										id="username"
+										name="username"
+										placeholder="Enter your username"
+										required />
+								</div>
+								<div class="validation-message" id="username-validation">
+									Username must be at least 3 characters
+								</div>
+							</div>
+
+							<div class="mb-3">
+								<label for="email" class="form-label">Email</label>
+								<div class="input-group">
+									<span class="input-group-text"
+										><i class="bi bi-envelope-fill"></i
+									></span>
+									<input
+										type="email"
+										class="form-control"
+										id="email"
+										name="email"
+										placeholder="Enter your email"
+										required />
+								</div>
+								<div class="validation-message" id="email-validation">
+									Please enter a valid email address
+								</div>
+							</div>
+
+							<div class="mb-3">
+								<label for="password" class="form-label">Password</label>
+								<div class="input-group">
+									<span class="input-group-text"
+										><i class="bi bi-lock-fill"></i
+									></span>
+									<input
+										type="password"
+										class="form-control"
+										id="password"
+										name="password"
+										placeholder="Create a password"
+										required />
+									<button
+										class="btn btn-outline-secondary"
+										type="button"
+										id="togglePassword">
+										<i class="bi bi-eye-fill"></i>
+									</button>
+								</div>
+								<div class="password-strength">
+									<div class="strength-bar" id="password-strength-bar"></div>
+								</div>
+								<div class="validation-message" id="password-validation">
+									Password must be at least 6 characters
+								</div>
+							</div>
+
+							<div class="mb-3">
+								<label for="confirm-password" class="form-label"
+									>Confirm Password</label
+								>
+								<div class="input-group">
+									<span class="input-group-text"
+										><i class="bi bi-lock-fill"></i
+									></span>
+									<input
+										type="password"
+										class="form-control"
+										id="confirm-password"
+										name="confirm-password"
+										placeholder="Confirm your password"
+										required />
+								</div>
+								<div
+									class="validation-message"
+									id="confirm-password-validation">
+									Passwords do not match
+								</div>
+							</div>
+
+							<div class="mb-3">
+								<label for="verification-code" class="form-label"
+									>Verification Code</label
+								>
+								<div class="input-group">
+									<span class="input-group-text"
+										><i class="bi bi-shield-lock-fill"></i
+									></span>
+									<input
+										type="text"
+										class="form-control"
+										id="verification-code"
+										name="verification-code"
+										maxlength="6"
+										placeholder="6-digit code"
+										required />
+								</div>
+								<div
+									class="validation-message"
+									id="verification-code-validation">
+									Code must be 6 digits
+								</div>
+							</div>
+
+							<div class="terms-check">
+								<input
+									type="checkbox"
+									class="form-check-input"
+									id="terms"
+									name="terms"
+									required />
+								<label for="terms"
+									>I agree to the
+									<a
+										href="#"
+										data-bs-toggle="modal"
+										data-bs-target="#termsModal"
+										>Terms and Conditions</a
+									></label
+								>
+							</div>
+
+							<button type="submit" class="btn btn-signup" id="submit-btn">
+								<span id="submit-text">Sign Up</span>
+								<span
+									id="submit-spinner"
+									class="spinner-border spinner-border-sm d-none"
+									role="status"
+									aria-hidden="true"></span>
+							</button>
+						</form>
+
+						<div class="login-link">
+							Already have an account? <a href="login.html">Log in here</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Terms and Conditions Modal -->
+		<div
+			class="modal fade"
+			id="termsModal"
+			tabindex="-1"
+			aria-labelledby="termsModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog modal-dialog-scrollable">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="termsModalLabel">
+							Terms and Conditions
+						</h5>
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<h6>1. Acceptance of Terms</h6>
+						<p>
+							By accessing or using ChatApp, you agree to be bound by these
+							Terms and Conditions. If you do not agree with any part of these
+							terms, you may not use our service.
+						</p>
+
+						<h6>2. User Accounts</h6>
+						<p>
+							You are responsible for maintaining the confidentiality of your
+							account and password. You agree to accept responsibility for all
+							activities that occur under your account.
+						</p>
+
+						<h6>3. Privacy Policy</h6>
+						<p>
+							Your use of ChatApp is also governed by our Privacy Policy, which
+							explains how we collect, use, and protect your personal
+							information.
+						</p>
+
+						<h6>4. User Conduct</h6>
+						<p>
+							You agree not to use ChatApp to upload, post, or otherwise
+							transmit any content that is unlawful, harmful, threatening,
+							abusive, harassing, defamatory, vulgar, obscene, or otherwise
+							objectionable.
+						</p>
+
+						<h6>5. Termination</h6>
+						<p>
+							We reserve the right to terminate or suspend your account
+							immediately, without prior notice or liability, for any reason
+							whatsoever, including without limitation if you breach these
+							Terms.
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button
+							type="button"
+							class="btn btn-primary"
+							data-bs-dismiss="modal">
+							I Understand
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Bootstrap JS (required for modal) -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- App Script (relative path so it works locally) -->
+		<script src="./Javascript/signup.js"></script>
+	</body>
 </html>

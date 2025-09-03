@@ -40,9 +40,18 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
+        const messageInputEl = document.getElementById("message-input");
         document.getElementById("send-btn").addEventListener("click", sendMessage);
-        document.getElementById("message-input").addEventListener("keypress", (e) => {
-            if (e.key === "Enter") sendMessage();
+        messageInputEl.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        // Auto-grow textarea
+        messageInputEl.addEventListener('input', () => {
+            messageInputEl.style.height = 'auto';
+            messageInputEl.style.height = Math.min(messageInputEl.scrollHeight, 160) + 'px';
         });
     }
 
@@ -107,20 +116,28 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!friend) return;
 
             const li = document.createElement("li");
+            // Avatar: use first letter or a default image
+            let avatarHtml = `<span class='contact-avatar'>${friend.username ? friend.username[0].toUpperCase() : "U"}</span>`;
             li.innerHTML = `
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <strong class="contact-name">${friend.username || friend.id}</strong>
-                        <div class="text-muted small contact-email">${friend.userEmail || friend.id}</div>
-                    </div>
-                    <small class="last-message-time text-muted"></small>
+                ${avatarHtml}
+                <div style="flex:1;min-width:0;">
+                    <div class="contact-name">${friend.username || friend.id}</div>
+                    <div class="contact-email">${friend.userEmail || friend.id}</div>
                 </div>
+                <small class="last-message-time text-muted"></small>
             `;
             li.setAttribute("data-id", friend.id);
             contactsList.appendChild(li);
 
             loadLastMessageTime(friend.id, li);
         });
+
+        // Auto select first contact if any
+        const first = contactsList.querySelector('li[data-id]');
+        if (first) {
+            startChat(first.getAttribute('data-id'));
+            first.classList.add('active-contact');
+        }
     }
 
     function loadLastMessageTime(contactId, contactElement) {
@@ -142,6 +159,11 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("chat-with-user").setAttribute("data-id", contactId);
         document.getElementById("message-input").disabled = false;
         document.getElementById("send-btn").disabled = false;
+        // Highlight active contact
+        document.querySelectorAll('#contacts-list li').forEach(li => li.classList.remove('active-contact'));
+        const activeLi = document.querySelector(`#contacts-list li[data-id="${contactId}"]`);
+        if (activeLi) activeLi.classList.add('active-contact');
+
         loadChatMessages(contactId);
     }
 
@@ -163,6 +185,9 @@ document.addEventListener("DOMContentLoaded", () => {
             messageDiv.classList.add(msg.sender === currentUserData.id ? "sent" : "received");
             messageDiv.setAttribute("data-index", index);
 
+            // Animate new messages
+            setTimeout(() => { messageDiv.style.boxShadow = "0 4px 16px rgba(80,227,194,0.08)"; }, 10);
+
             // Get sender name
             const sender = allUsers.find(u => u.id === msg.sender);
             const senderName = sender ? (sender.username || sender.id) : msg.sender;
@@ -178,6 +203,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
             }
 
+            messageDiv.innerHTML = `
+                ${msg.sender !== currentUserData.id ? `<div class="sender-name small">${senderName}</div>` : ""}
+                ${messageContent}
+                <div class="message-time">${formatMessageTime(msg.timestamp)}</div>
+            `;
+
             const menuButton = document.createElement("button");
             menuButton.className = "message-menu-btn";
             menuButton.innerHTML = '&#8942;';
@@ -185,18 +216,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.stopPropagation();
                 showMessageMenu(e, msg, chatKey, index);
             };
-
-            messageDiv.innerHTML = `
-                ${msg.sender !== currentUserData.id ? `<div class="sender-name small">${senderName}</div>` : ""}
-                ${messageContent}
-                <div class="message-time">${formatMessageTime(msg.timestamp)}</div>
-            `;
-
             messageDiv.appendChild(menuButton);
             chatMessages.appendChild(messageDiv);
         });
 
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        // Auto scroll if near bottom
+        const shouldStick = (chatMessages.scrollTop + chatMessages.clientHeight + 120) >= chatMessages.scrollHeight;
+        if (shouldStick) chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
     function showMessageMenu(event, msg, chatKey, index) {
@@ -223,14 +249,17 @@ document.addEventListener("DOMContentLoaded", () => {
         menu.style.top = `${top}px`;
         menu.style.zIndex = "1000";
 
-        const editBtn = document.createElement("button");
-        editBtn.className = "menu-item";
-        editBtn.innerHTML = '<i class="bi bi-pencil"></i> Edit';
-        editBtn.onclick = () => {
-            editMessage(chatKey, index);
-            menu.remove();
-        };
-        menu.appendChild(editBtn);
+        // Only show Edit for own messages
+        if (msg.sender === currentUserData.id) {
+            const editBtn = document.createElement("button");
+            editBtn.className = "menu-item";
+            editBtn.innerHTML = '<i class="bi bi-pencil"></i> Edit';
+            editBtn.onclick = () => {
+                editMessage(chatKey, index);
+                menu.remove();
+            };
+            menu.appendChild(editBtn);
+        }
 
         const deleteMeBtn = document.createElement("button");
         deleteMeBtn.className = "menu-item";
@@ -241,14 +270,17 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         menu.appendChild(deleteMeBtn);
 
-        const deleteAllBtn = document.createElement("button");
-        deleteAllBtn.className = "menu-item";
-        deleteAllBtn.innerHTML = '<i class="bi bi-trash-fill"></i> Delete for everyone';
-        deleteAllBtn.onclick = () => {
-            deleteMessage(chatKey, index, true);
-            menu.remove();
-        };
-        menu.appendChild(deleteAllBtn);
+        // Only show Delete for everyone for own messages
+        if (msg.sender === currentUserData.id) {
+            const deleteAllBtn = document.createElement("button");
+            deleteAllBtn.className = "menu-item";
+            deleteAllBtn.innerHTML = '<i class="bi bi-trash-fill"></i> Delete for everyone';
+            deleteAllBtn.onclick = () => {
+                deleteMessage(chatKey, index, true);
+                menu.remove();
+            };
+            menu.appendChild(deleteAllBtn);
+        }
 
         document.body.appendChild(menu);
 
@@ -285,26 +317,54 @@ document.addEventListener("DOMContentLoaded", () => {
 
         localStorage.setItem(chatKey, JSON.stringify(messages));
         messageInput.value = "";
+        messageInput.style.height = '48px';
         loadChatMessages(contactId);
 
         updateContactLastMessageTime(contactId, timestamp);
     }
 
+    // Modal-based edit
+    let editModal = null;
+    let editMessageChatKey = null;
+    let editMessageIndex = null;
+    // Always initialize modal after DOM is ready
+    function getEditModal() {
+        if (!editModal) {
+            const modalEl = document.getElementById('editMessageModal');
+            if (modalEl) editModal = new bootstrap.Modal(modalEl);
+        }
+        return editModal;
+    }
     function editMessage(chatKey, messageIndex) {
         const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
         const message = messages[messageIndex];
-
-        const newText = prompt("Edit your message:", message.text);
-        if (newText !== null && newText.trim() !== "" && newText !== message.text) {
+        const newText = prompt('Edit your message:', message.text);
+        if (newText !== null && newText.trim() !== '' && newText !== message.text) {
             message.text = newText.trim();
             message.edited = true;
             message.timestamp = new Date().toISOString();
             localStorage.setItem(chatKey, JSON.stringify(messages));
-
             const contactId = document.getElementById("chat-with-user").getAttribute("data-id");
             loadChatMessages(contactId);
         }
     }
+
+    document.getElementById('saveEditMessageBtn').onclick = function () {
+        const newText = document.getElementById('editMessageInput').value.trim();
+        if (newText && editMessageChatKey !== null && editMessageIndex !== null) {
+            const messages = JSON.parse(localStorage.getItem(editMessageChatKey)) || [];
+            const message = messages[editMessageIndex];
+            if (newText !== message.text) {
+                message.text = newText;
+                message.edited = true;
+                message.timestamp = new Date().toISOString();
+                localStorage.setItem(editMessageChatKey, JSON.stringify(messages));
+                const contactId = document.getElementById("chat-with-user").getAttribute("data-id");
+                loadChatMessages(contactId);
+            }
+        }
+        if (editModal) editModal.hide();
+    };
 
     function deleteMessage(chatKey, messageIndex, deleteForEveryone) {
         const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
@@ -391,6 +451,11 @@ document.addEventListener("DOMContentLoaded", () => {
         .menu-item i {
             margin-right: 8px;
         }
+        .active-contact {
+            background-color: #1abc9c !important;
+            color: #fff;
+        }
+        .active-contact .contact-email, .active-contact .last-message-time { color: #e8fdf7 !important; }
     `;
     document.head.appendChild(style);
 });
