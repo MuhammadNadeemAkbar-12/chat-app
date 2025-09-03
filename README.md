@@ -65,12 +65,6 @@ Made with ❤️ by Muhammad Nadeem Akbar & contributors.
 
 ## 📧 Contact
 
-For questions or feedback, open an issue or email: nadeemakbar781781@gmail.com
-
-## 🦄 Emojis Used
-
-🚀 ✨ 📝 💬 👥 🗑️ ✏️ 🌗 🔒 📱 🎨 🛠️ 📦 🧑‍💻 ⚡ 📝 🙏 📧 🦄
-
----
+For questions or feedback, open an issue or email: nadeemakbar1201@gmail.com
 
 Enjoy chatting! 😃
