@@ -4,6 +4,12 @@ Welcome to ChatApp! This is a modern, responsive chat application built with
 pure HTML, CSS, and JavaScript. All data is stored locally in your browser (no
 backend required).
 
+## 🔗 Live Demo
+
+Production Deployment: https://chat-erwj7iwi6-muhammad-nadeem-akbars-projects.vercel.app
+
+> If this per-deployment URL ever changes, use the project domain from Vercel dashboard and update here.
+
 ## ✨ Features
 
 - 📝 Sign Up & Login (with email, password, and verification code)
